@@ -1,0 +1,39 @@
+# shanisarf-db-msa: notices
+
+This package holds data only: the Camel Morph MSA v1.0 morphological
+database, compiled into shanisarf's asset format. It contains no code, and
+shanisarf's MIT license is not its license.
+
+## Camel Morph MSA v1.0 (morphological database)
+
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0),
+  https://creativecommons.org/licenses/by/4.0/
+- Attribution text: "Camel Morph MSA v1.0, developed by the CAMeL Lab at New
+  York University Abu Dhabi (Khairallah et al., 2024),
+  https://github.com/CAMeL-Lab/camel_morph, licensed under CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Adapted (compiled) by
+  shanisarf."
+- Citation: Khairallah, Christian, Salam Khalifa, Reham Marzouk, Mayar
+  Mohamadein Nassar and Nizar Habash. "Camel Morph MSA: A Large-Scale
+  Open-Source Morphological Analyzer for Modern Standard Arabic." LREC-COLING
+  2024. https://aclanthology.org/2024.lrec-main.240.pdf
+- Source: https://github.com/CAMeL-Lab/camel_morph, file
+  `official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db`,
+  commit `15f5aede4b609db54abd6f87aded1f5ec5d930af`, SHA-256
+  `110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60`.
+- Changes: the database is compiled into shanisarf's asset format (its
+  tables as typed arrays, transformed reversibly and compressed). The raw
+  file is not included.
+- Provenance of the scores: the stems' `lex_logprob` and `pos_lex_logprob`
+  values are the database's own. Upstream computed them from Penn Arabic
+  Treebank data synchronized with SAMA/MADA (resources of the Linguistic
+  Data Consortium, not public) and published the resulting values in this
+  file under CC BY 4.0; this package relies on that statement.
+- Disclaimer: the database is offered under CC BY 4.0, whose Section 5
+  disclaims all warranties and limits liability
+  (https://creativecommons.org/licenses/by/4.0/legalcode#s5). Nothing here
+  implies that CAMeL Lab endorses shanisarf or this package.
+
+The same attribution, citation, source and disclaimer travel in every
+compiled asset's `manifest.json`, and in the `provenance` of every database
+that shanisarf's `loadDatabase` opens from it.

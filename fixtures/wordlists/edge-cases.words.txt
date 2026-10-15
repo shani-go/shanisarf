@@ -1,0 +1,38 @@
+# shanisarf parity Word_List: edge-cases
+# seed: n/a (fixed invented inventory, no randomness)
+# one word per line; '#' lines are metadata; see NOTICE
+12345
+١٢٣٤٥
+۱۲۳۴۵
+a1
+!!!
+?!.
+كتاب.
+(كتاب)
+،
+كتاب؟
+كتـاب
+ـكتاب
+كتابـ
+َ
+ًّ
+
+ 
+ 
+　
+ء
+أ
+إ
+ؤ
+ئ
+ٱ
+پچڤگ
+hello
+привет
+你好
+http://example.test/a
+NOAN
+كت‌اب
+كتاب😀
+😀
+𐀀

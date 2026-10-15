@@ -1,0 +1,252 @@
+# shanisarf: third-party notices
+
+Every upstream input to shanisarf is listed here with its license and the
+obligation shanisarf carries. Add a row before the input enters the repository
+or the build (`CONTRIBUTING.md`). Code inputs are MIT only.
+Data inputs are public domain, CC0 or CC BY when committed or packaged;
+CC BY-SA inputs may appear here only as consulted-and-cited sources or as
+lists fetched into the git-ignored `data/` for local tests, never as the
+origin of a committed file.
+
+## Code
+
+### CAMeL Tools (engine port)
+
+- Source: https://github.com/CAMeL-Lab/camel_tools (version 1.6.0, pinned in
+  `tools/parity/requirements.txt` as `camel-tools==1.6.0`)
+- License: MIT. Copyright 2018-2026 New York University Abu Dhabi.
+- What shanisarf takes: a TypeScript transformation of `camel_tools/morphology/`
+  (`analyzer.py`, `database.py`, `utils.py`, `errors.py`, `generator.py`
+  and `reinflector.py`), `camel_tools/utils/` (`dediac.py`,
+  `normalize.py`, `charmap.py`, `charsets.py`, `transliterate.py`), and
+  `camel_tools/tokenizers/word.py`, plus the twenty-one built-in
+  character-map data tables `camel_tools/utils/charmaps/<name>_map.json`, from which
+  `tools/gen-charmaps.ts` generates `src/engine/charmaps/<name>.ts` (the
+  generated files carry the per-file ported-code notice naming the JSON). The
+  raw JSON is read from the git-ignored `data/camel-tools-charmaps/` (a copy of
+  the CAMeL Tools 1.6.0 install's charmaps directory) and is never committed.
+- Obligation: retain the copyright and permission notice. The upstream LICENSE
+  is reproduced verbatim at `licenses/CAMEL_TOOLS_LICENSE`; the README
+  points to it. Every ported or structurally similar source file carries
+  a per-file notice naming its upstream file, version and this copyright
+  line (`CONTRIBUTING.md`).
+- Citation requested by the CAMeL Tools README ("If you find CAMeL Tools useful
+  in your research, please cite our paper"):
+
+  ```bibtex
+  @inproceedings{obeid-etal-2020-camel,
+     title = "{CAM}e{L} Tools: An Open Source Python Toolkit for {A}rabic Natural Language Processing",
+     author = "Obeid, Ossama  and
+        Zalmout, Nasser  and
+        Khalifa, Salam  and
+        Taji, Dima  and
+        Oudah, Mai  and
+        Alhafni, Bashar  and
+        Inoue, Go  and
+        Eryani, Fadhl  and
+        Erdmann, Alexander  and
+        Habash, Nizar",
+     booktitle = "Proceedings of the 12th Language Resources and Evaluation Conference",
+     month = may,
+     year = "2020",
+     address = "Marseille, France",
+     publisher = "European Language Resources Association",
+     url = "https://www.aclweb.org/anthology/2020.lrec-1.868",
+     pages = "7022--7032",
+     language = "English",
+     ISBN = "979-10-95546-34-4",
+  }
+  ```
+
+  Plain form: Obeid, Ossama, Nasser Zalmout, Salam Khalifa, Dima Taji, Mai Oudah,
+  Bashar Alhafni, Go Inoue, Fadhl Eryani, Alexander Erdmann and Nizar Habash.
+  "CAMeL Tools: An Open Source Python Toolkit for Arabic Natural Language
+  Processing." LREC 2020. https://aclanthology.org/2020.lrec-1.868/
+
+## Data
+
+### Camel Morph MSA v1.0 (morphological database)
+
+- Source: https://github.com/CAMeL-Lab/camel_morph, file
+  `official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db`,
+  pinned to commit `15f5aede4b609db54abd6f87aded1f5ec5d930af`, SHA-256
+  `110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60`
+  (84,959,404 bytes). The commit, path and SHA-256 are fixed in
+  `tools/parity/fetch_db.py`, which fetches and verifies the file; the same
+  SHA-256 travels in each compiled asset's manifest.
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0) for the
+  data. The repository README's "Data License" section states (re-read
+  2026-10-13 at the pinned commit, which was then also the head of `main`):
+  "The data files accessed through the below links are licensed under a
+  Creative Commons Attribution 4.0 International License." The first link
+  below that sentence is this `.db` file (README.md lines 46 and 49 at the
+  pin). The LREC-COLING 2024 release's own README and
+  `official_releases/lrec-coling2024_release/databases/README.md` make the
+  same statement for the release's databases. The repository's code
+  is MIT (Copyright 2018-2022 New York University Abu Dhabi; reproduced
+  verbatim at `licenses/CAMEL_MORPH_LICENSE`) and is not used by shanisarf.
+- What shanisarf takes: the database, compiled into shanisarf's asset format
+  (an adaptation under CC BY 4.0). The raw file is never committed; `tools/`
+  downloads it to the git-ignored `data/`.
+- Provenance of the scores: the stems' `lex_logprob` and `pos_lex_logprob`
+  values are compiled in as published. Upstream computed them from Penn
+  Arabic Treebank data synchronized with SAMA/MADA, resources of the
+  Linguistic Data Consortium (LDC) that it says are not publicly accessible,
+  and published the resulting values (a log-probability per lemma and per
+  lemma-and-part-of-speech, 442 distinct values each; no text) in this file
+  under CC BY 4.0 (`official_releases/lrec-coling2024_release/README.md` at
+  the pin: the "Generating a DB" section, and the license line above it,
+  which covers the file). shanisarf is not a party to any LDC agreement and
+  relies on the licensor's statement, as it does for the rest of the file;
+  the values carry no text and are committed nowhere (the parity fixtures
+  that hold them are git-ignored). The `stripLogprobs` compile option sets
+  them to `-99` for a caller's own build and says so in that asset's
+  disclaimer.
+- Obligation: attribution, in this file, in the README, and in the compiled
+  asset's manifest (`credits` field), with a link to the license, a note
+  that the data was adapted, and a pointer to the upstream warranty
+  disclaimer (`disclaimer` field). Nothing may imply CAMeL Lab endorses
+  shanisarf. The data package directory `packages/shanisarf-db-msa/` (the
+  compiled asset; not published) carries the attribution and citation
+  below in its `NOTICE` and in its `source.json`, the Source_Record every
+  manifest is built from; each compiled asset's `manifest.json` carries
+  them as `credits` and `citation`, with `license`, `source`,
+  `sourceSha256` and `disclaimer`.
+- Attribution text: "Camel Morph MSA v1.0, developed by the CAMeL Lab at New
+  York University Abu Dhabi (Khairallah et al., 2024),
+  https://github.com/CAMeL-Lab/camel_morph, licensed under CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Adapted (compiled) by
+  shanisarf."
+- Wording of the attribution: upstream gives no copyright notice for the
+  data. Its README calls the work "developed by the CAMeL Lab at New York
+  University Abu Dhabi" and asks that the release be cited as Khairallah et
+  al. (2024), and its code license names New York University Abu Dhabi as
+  the code's copyright holder. The attribution text follows those words.
+- Citation: Khairallah, Christian, Salam Khalifa, Reham Marzouk, Mayar
+  Mohamadein Nassar and Nizar Habash. "Camel Morph MSA: A Large-Scale
+  Open-Source Morphological Analyzer for Modern Standard Arabic." LREC-COLING
+  2024. https://aclanthology.org/2024.lrec-main.240.pdf
+
+### Camel Morph MSA v1.0 typed features (`src/msa-features.ts`, generated)
+
+- Source: the Camel Morph MSA v1.0 database above, at the same commit and
+  SHA-256; no separate download. `scripts/gen-msa-features.mjs` reads the
+  git-ignored text under `data/` (its SHA-256 checked against
+  `packages/shanisarf-db-msa/source.json`), or the compiled Asset when the
+  text is absent, and writes the module (`npm run gen:features`).
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0), the
+  same license as the database the values are taken from. The module's code
+  around them (its types and the `isMsaValue` guard) is shanisarf's, MIT.
+- What shanisarf takes: the database's `ORDER` list (53 feature names) and
+  the value lists of its 23 closed `DEFINE` lines (`pos`, `gen`, `num`,
+  `enc0` and the others), in the database's order, as constants and types.
+  No stem, gloss, score or other entry data; no text. The module is
+  committed and ships in the core package, exported from the package root.
+- Obligation: attribution, as for the database. The module's header names
+  the Generator, the pin (name, version, commit and SHA-256) and the
+  attribution text below with the license link, and points to this file.
+- Attribution text: as for "Camel Morph MSA v1.0" above: "Camel Morph MSA
+  v1.0, developed by the CAMeL Lab at New York University Abu Dhabi
+  (Khairallah et al., 2024), https://github.com/CAMeL-Lab/camel_morph,
+  licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).
+  Adapted (compiled) by shanisarf."
+
+## Fixture word lists
+
+Each list added for parity fixtures gets a row here: source URL, license
+(public domain / CC0 / CC BY only for committed fixtures), the derivation
+applied, and the attribution text. A CC BY-SA list used only for a local
+test from `data/` gets a row too, marked "local only, nothing committed".
+
+The three lists below are built by `tools/parity/wordlists.py`, each
+deterministically from the seed recorded in its own file header, and written
+to `fixtures/wordlists/<name>.words.txt`.
+
+### db-forms (parity word list)
+
+- Source: derived from the Camel Morph MSA v1.0 database (see "Camel Morph
+  MSA v1.0" above), not from any separate download.
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0), the
+  same license as the database it is sampled from.
+- What shanisarf takes: a seeded sample of 1,200 stem surfaces, each as the
+  bare stem and in up to three affixed forms chosen through the AB, BC and AC
+  compatibility tables, plus one normalization variant per form where
+  applicable. The list is generated at `tools/parity/generate.py` time from
+  the git-ignored database; the resulting `fixtures/wordlists/db-forms.words.txt`
+  is a committed CC BY 4.0 fixture.
+- Obligation: attribution, as for the database. Attribution text: "Word
+  forms sampled from Camel Morph MSA v1.0, developed by the CAMeL Lab at New
+  York University Abu Dhabi (Khairallah et al., 2024),
+  https://github.com/CAMeL-Lab/camel_morph, licensed under CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Sampled by shanisarf."
+
+### edge-cases (parity word list)
+
+- Source: invented by shanisarf; no third-party source.
+- License: not applicable (original work; released with the repository under
+  its MIT terms as a committed fixture).
+- What shanisarf takes: nothing third-party. The list is an invented edge
+  inventory (digits in
+  three scripts, mixed script, tatweel, isolated diacritics, attached
+  punctuation, empty and whitespace input, hamza and wasla forms, Persian
+  letters, Latin/Cyrillic/CJK, a URL-like token, `NOAN`, ZWNJ, an emoji
+  attached to Arabic, a supplementary-plane character), built without the
+  database.
+- Obligation: none (no third-party input). No running text; the list carries
+  only invented or database-origin tokens and passes `scan_text.py`.
+
+### backoff-nonwords (parity word list)
+
+- Source: invented by shanisarf; no third-party source.
+- License: not applicable (original work; committed fixture as above).
+- What shanisarf takes: nothing third-party. 200 seeded strings generated
+  over `AR_LETTERS_CHARSET` and filtered, at `generate.py` time, to those
+  absent from the database's stem table, so each is a non-word that exercises
+  the backoff path.
+- Obligation: none (no third-party input). No running text.
+
+## Generation request lists
+
+Two request lists drive the generator and reinflector fixtures. They are
+built by
+`tools/parity/wordlists.py`, each deterministically from the seed recorded
+in its own header line, and written to
+`fixtures/wordlists/<name>.requests.jsonl`, one JSON object per line
+(`lemma` or `word`, and `feats`). `tools/parity/scan_text.py` checks every
+line's shape and string values before commit.
+
+### gen-requests (parity request list)
+
+- Source: derived from the Camel Morph MSA v1.0 database (see "Camel Morph
+  MSA v1.0" above), plus invented edge requests; no separate download.
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0), the
+  same license as the database the lemmas and feature values are taken from.
+- What shanisarf takes: a seeded sample of 300 lemmas of the database's
+  lemma table, each with up to nine feature requests built from its first
+  stem, its part of speech's `DEFAULTS` row and the database's defined values,
+  one seeded clitic request each, and an invented block of edge requests (an
+  unknown lemma, lemma suffixes, an undefined feature, an invalid value, a
+  missing or undefined `pos`, a key outside the `DEFAULTS` row, the `NOAN`
+  lemma). The list is generated at `tools/parity/generate.py` time from the
+  git-ignored database; the resulting
+  `fixtures/wordlists/gen-requests.requests.jsonl` is a committed CC BY 4.0
+  fixture.
+- Obligation: attribution, as for the database. Attribution text: "Lemmas
+  and feature values sampled from Camel Morph MSA v1.0, developed by the
+  CAMeL Lab at New York University Abu Dhabi (Khairallah et al., 2024),
+  https://github.com/CAMeL-Lab/camel_morph, licensed under CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Sampled by shanisarf."
+
+### reinflect-requests (parity request list)
+
+- Source: the `db-forms` and `edge-cases` parity word lists above, with
+  feature bundles invented by shanisarf.
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0) for the
+  `db-forms` words (derived from the database); the `edge-cases` words and
+  the bundles are invented, with no third-party source.
+- What shanisarf takes: 400 seeded `db-forms` words, each paired with ten
+  invented feature bundles; every `edge-cases` word paired with three of
+  them; and invented error bundles (an undefined feature, an invalid value,
+  `ANY` on a feature that does not accept it).
+- Obligation: attribution for the `db-forms` words, as for `db-forms`. No
+  running text; every word passes `scan_text.py`.

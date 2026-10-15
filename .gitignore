@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+# downloaded ALMOR databases and compiled assets; never committed
+data/
+packages/shanisarf-db-msa/asset/
+# parity fixtures derived from the CC BY database output; never committed
+fixtures/parity/
+tools/**/.venv/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+.claude/

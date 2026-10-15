@@ -1,0 +1,72 @@
+{
+  "schema": "shanisarf-canonical-vector/1",
+  "note": "Invented sample analyses and their expected Canonical_Keys (engine-parity Decision 5, Requirements 11.9 and 12.7). Both tools/parity/canonical.py and tests/parity/canonical.ts check against this so the two serializers stay byte-for-byte identical. This is a committed meta fixture: the analyses are invented, with no third-party source, and are not derived from the Camel Morph database or any copyrighted text, so it is committed unlike the git-ignored parity fixtures (parity-fixtures steering).",
+  "vectors": [
+    {
+      "name": "empty analysis",
+      "analysis": {},
+      "canonicalKey": "{}"
+    },
+    {
+      "name": "keys sorted ascending",
+      "analysis": {
+        "c": "3",
+        "a": "1",
+        "b": "2"
+      },
+      "canonicalKey": "{\"a\":\"1\",\"b\":\"2\",\"c\":\"3\"}"
+    },
+    {
+      "name": "integral log-probabilities print without a fractional part",
+      "analysis": {
+        "diac": "kataba",
+        "pos_logprob": -99,
+        "lex_logprob": -99,
+        "pos_lex_logprob": -99
+      },
+      "canonicalKey": "{\"diac\":\"kataba\",\"lex_logprob\":-99,\"pos_lex_logprob\":-99,\"pos_logprob\":-99}"
+    },
+    {
+      "name": "a non-integral log-probability keeps its digits",
+      "analysis": {
+        "lex_logprob": -6.71828,
+        "stemcat": "X99999"
+      },
+      "canonicalKey": "{\"lex_logprob\":-6.71828,\"stemcat\":\"X99999\"}"
+    },
+    {
+      "name": "non-ASCII Arabic value left unescaped",
+      "analysis": {
+        "diac": "كَتَبَ",
+        "lex": "كتب_1"
+      },
+      "canonicalKey": "{\"diac\":\"كَتَبَ\",\"lex\":\"كتب_1\"}"
+    },
+    {
+      "name": "null value serialized as null",
+      "analysis": {
+        "stemcat": null,
+        "pos": "digit"
+      },
+      "canonicalKey": "{\"pos\":\"digit\",\"stemcat\":null}"
+    },
+    {
+      "name": "string escaping of quote and backslash",
+      "analysis": {
+        "gloss": "a \"quoted\" word",
+        "bw": "back\\slash"
+      },
+      "canonicalKey": "{\"bw\":\"back\\\\slash\",\"gloss\":\"a \\\"quoted\\\" word\"}"
+    },
+    {
+      "name": "mixed types in one analysis",
+      "analysis": {
+        "diac": "رَجُل",
+        "lex_logprob": -4.5,
+        "stemcat": null,
+        "num": 2
+      },
+      "canonicalKey": "{\"diac\":\"رَجُل\",\"lex_logprob\":-4.5,\"num\":2,\"stemcat\":null}"
+    }
+  ]
+}

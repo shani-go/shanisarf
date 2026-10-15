@@ -1,0 +1,16 @@
+{
+  "formatVersion": 1,
+  "assetDigest": "7523fca351c45ac82d6a002c4013f393cf0a758b4c08cde8b8f27c2fb54c782e",
+  "shards": [
+    {
+      "part": "header",
+      "size": 5704616,
+      "sha256": "7215c4d61133489e4947e5f3932e6470eb0a01c52ef3443b948a090395eb394a"
+    },
+    {
+      "part": "stems",
+      "size": 39316376,
+      "sha256": "d1f3baf313b9ebd6dedeedcadf4954fb328fcbf13cf43172b98de641cbddb31d"
+    }
+  ]
+}

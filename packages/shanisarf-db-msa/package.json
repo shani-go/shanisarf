@@ -1,0 +1,16 @@
+{
+  "name": "shanisarf-db-msa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Camel Morph MSA v1.0 morphological database compiled into shanisarf's asset format, for shanisarf's loadDatabase. Data only, no code.",
+  "license": "CC-BY-4.0",
+  "files": [
+    "asset",
+    "README.md",
+    "NOTICE"
+  ],
+  "exports": {
+    "./asset/*": "./asset/*",
+    "./package.json": "./package.json"
+  }
+}

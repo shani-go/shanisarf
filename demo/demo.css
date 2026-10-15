@@ -1,0 +1,165 @@
+/*
+  shanisarf — Arabic morphological analyzer. Copyright 2026 shani-go
+  (https://github.com/shani-go), MIT License.
+
+  The demo page's styles. No inline styles: the page's CSP allows style
+  sheets from its own origin only.
+*/
+
+:root {
+  --bg: #fbfaf8;
+  --fg: #1d1d1f;
+  --muted: #5d5d63;
+  --line: #dedbd5;
+  --accent: #1f5f8b;
+  --error: #a3261c;
+  --ok: #2e6b33;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17171a;
+    --fg: #ececee;
+    --muted: #a3a3aa;
+    --line: #34343a;
+    --accent: #7db6e0;
+    --error: #ff8a7d;
+    --ok: #8fd193;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+header p,
+.note,
+.small {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.85rem;
+}
+
+.status {
+  margin: 1rem 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.status.ready {
+  border-color: var(--ok);
+}
+
+.status.error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.query {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.query input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  font-size: 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+}
+
+button {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--bg);
+  font: inherit;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+button:disabled,
+input:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.results {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.92rem;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.35rem 0.5rem;
+  text-align: start;
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.ar {
+  font-size: 1.15rem;
+  unicode-bidi: isolate;
+}
+
+.num {
+  color: var(--muted);
+}
+
+.attribution {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+a {
+  color: var(--accent);
+}

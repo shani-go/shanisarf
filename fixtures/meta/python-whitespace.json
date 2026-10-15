@@ -1,0 +1,86 @@
+{
+  "schema": "shanisarf-python-whitespace/1",
+  "note": "The code points for which Python's str.isspace() is true and seeded strip/split samples. The engine's PY_WHITESPACE is pinned to the `whitespace` list; this file is generated, never hand-edited.",
+  "python": "3.14.5",
+  "whitespace": [
+    "\t",
+    "\n",
+    "\u000b",
+    "\f",
+    "\r",
+    "\u001c",
+    "\u001d",
+    "\u001e",
+    "\u001f",
+    " ",
+    "",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    "　"
+  ],
+  "samples": [
+    {
+      "input": "  abc  ",
+      "strip": "abc",
+      "split": [
+        "abc"
+      ]
+    },
+    {
+      "input": "\t\n abc def \r\n",
+      "strip": "abc def",
+      "split": [
+        "abc",
+        "def"
+      ]
+    },
+    {
+      "input": "abc",
+      "strip": "abc",
+      "split": [
+        "abc"
+      ]
+    },
+    {
+      "input": "   ",
+      "strip": "",
+      "split": []
+    },
+    {
+      "input": "",
+      "strip": "",
+      "split": []
+    },
+    {
+      "input": "a b c",
+      "strip": "a b c",
+      "split": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    {
+      "input": "　word　",
+      "strip": "word",
+      "split": [
+        "word"
+      ]
+    }
+  ]
+}

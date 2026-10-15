@@ -1,0 +1,50 @@
+<!doctype html>
+<!--
+  shanisarf — Arabic morphological analyzer. Copyright 2026 shani-go
+  (https://github.com/shani-go), MIT License.
+
+  The demo page. Static files, no build step: it loads the analyzer in a
+  worker from the compiled Asset, all from this page's own origin, which the
+  Content-Security-Policy below (and the server's header) enforces.
+  `npm run demo` serves it and writes the expected Asset_Digest into
+  `data-manifest-sha256` on <html>.
+-->
+<html lang="en" data-manifest-sha256="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; connect-src 'self'; style-src 'self'; img-src 'self'">
+    <title>shanisarf demo</title>
+    <link rel="stylesheet" href="demo.css">
+    <script type="module" src="demo.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>shanisarf</h1>
+        <p>Arabic morphological analysis in this page. The database loads once from this server; after that, nothing you type leaves the page.</p>
+      </header>
+
+      <section id="status" class="status" aria-live="polite">Loading the database…</section>
+
+      <form id="form" class="query" autocomplete="off">
+        <label for="word">Word</label>
+        <input id="word" name="word" dir="rtl" lang="ar" placeholder="كلمة" disabled>
+        <button id="analyze" type="submit" disabled>Analyze</button>
+        <button id="example" type="button" class="secondary" disabled>Try an example</button>
+      </form>
+      <p class="note">Analyses are listed in the engine's order. Ranking is not applied.</p>
+
+      <section id="results" class="results"></section>
+
+      <footer id="attribution" class="attribution" hidden>
+        <h2>Database</h2>
+        <p id="credits"></p>
+        <p>License: <a id="license" href="" rel="license"></a></p>
+        <p id="disclaimer"></p>
+        <p>Cite: <span id="citation"></span></p>
+        <p class="small">The example word is taken from this database.</p>
+      </footer>
+    </main>
+  </body>
+</html>

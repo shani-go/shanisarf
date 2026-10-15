@@ -1,0 +1,15 @@
+{
+  "id": "camel-morph-msa",
+  "name": "Camel Morph MSA",
+  "version": "1.0",
+  "source": "https://github.com/CAMeL-Lab/camel_morph/blob/15f5aede4b609db54abd6f87aded1f5ec5d930af/official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db",
+  "sourceSha256": "110e03baa282874062d076e23d9671e985b6f76520b891d58cba4e55de0b8f60",
+  "sourceBytes": 84959404,
+  "license": {
+    "id": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "credits": "Camel Morph MSA v1.0, developed by the CAMeL Lab at New York University Abu Dhabi (Khairallah et al., 2024), https://github.com/CAMeL-Lab/camel_morph, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Adapted (compiled) by shanisarf.",
+  "disclaimer": "The database is offered under CC BY 4.0, whose Section 5 disclaims all warranties and limits liability: https://creativecommons.org/licenses/by/4.0/legalcode#s5. The compiled asset is shanisarf's adaptation, and nothing in it implies that CAMeL Lab endorses shanisarf. The stems' lex_logprob and pos_lex_logprob values are the database's own: upstream computed them from Penn Arabic Treebank data and published them in this file under CC BY 4.0.",
+  "citation": "Khairallah, Christian, Salam Khalifa, Reham Marzouk, Mayar Mohamadein Nassar and Nizar Habash. \"Camel Morph MSA: A Large-Scale Open-Source Morphological Analyzer for Modern Standard Arabic.\" LREC-COLING 2024. https://aclanthology.org/2024.lrec-main.240.pdf"
+}

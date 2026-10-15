@@ -1,0 +1,75 @@
+# shanisarf parity venv — pinned, developer-only, never committed or packaged.
+#
+# This file pins the Python environment the Parity_Harness runs in. The venv
+# it builds lives at tools/parity/.venv/ (git-ignored) and exists only to run
+# the Reference (CAMeL Tools 1.6.0) and write the golden fixtures under
+# fixtures/. Nothing from these packages is committed to the repo or shipped
+# in the npm package: shanisarf's engine is TypeScript with zero runtime
+# dependencies (Requirements 14.3, 14.4). CAMeL Tools is MIT and already has
+# its NOTICE row; the support packages below are permissive (MIT / BSD /
+# Apache-2.0 / HPND) and, being developer-only build tooling, carry no
+# attribution obligation in the shipped artifact.
+#
+# Build it with: npm run parity:setup  (see scripts/parity.mjs). The setup
+# step creates the venv, installs this file, and runs smoke_import.py to
+# prove the analysis path imports without the heavy, out-of-range deps.
+#
+# Supported interpreter: Python 3.11–3.14 (64-bit), matching CAMeL Tools
+# 1.6.0. The Rust toolchain is NOT required here because --no-deps skips
+# camel-kenlm (the only package that needs it); see below.
+
+# --- CAMeL Tools, installed WITHOUT its dependency closure. ----------------
+#
+# CAMeL Tools 1.6.0 declares install_requires that pull torch (>=2.0),
+# transformers (>=4.44.0), scikit-learn (>=1.8.0), camel-kenlm, numpy, pandas,
+# scipy, dill and more. shanisarf uses only the analysis path
+# (camel_tools.morphology, .utils, .tokenizers), which needs none of those.
+# So camel-tools MUST be installed with --no-deps and the analysis path's
+# real runtime needs listed explicitly below.
+#
+# INSTALL THIS LINE WITH --no-deps. pip does not honor a per-requirement
+# --no-deps inside a requirements file, so parity:setup installs in two
+# phases:
+#
+#   pip install --no-deps camel-tools==1.6.0
+#   pip install -r tools/parity/requirements.txt   # the pinned deps below
+#
+# The camel-tools pin is NOT a requirement line here: `pip install -r` walks
+# the dependency tree of every line it is given, so listing camel-tools in
+# this file pulled torch, transformers, scikit-learn, camel-kenlm and the rest
+# into the venv (smoke_import.py catches that). Phase 1 above installs
+# it; scripts/parity.mjs pins the version there:
+#
+#   camel-tools==1.6.0
+
+# --- Analysis-path runtime dependencies (the only ones we need). -----------
+# Versions chosen for compatibility with camel-tools 1.6.0 (which requires
+# cachetools>=6.0.0 and leaves the rest unconstrained) and with Python 3.14:
+# regex ships a cp314 wheel; pyrsistent, cachetools and emoji ship pure wheels.
+cachetools==7.2.1    # MIT — LFU cache used by camel_tools.morphology.analyzer
+emoji==2.16.0        # BSD-3-Clause — emoji data for the word tokenizer
+six==1.17.0          # MIT — py2/3 compat shim imported transitively
+regex==2026.9.29     # Apache-2.0 — Unicode-property regexes in utils/tokenizers
+pyrsistent==0.20.0   # MIT — immutable structures used by the morphology model
+tqdm==4.70.1         # MPL-2.0+MIT (dual) — progress bars; MIT portion applies
+requests==2.34.2     # Apache-2.0 — used only by fetch_db.py (developer fetch)
+muddler==0.1.3       # MIT (Copyright 2020-2022 NYU Abu Dhabi) — imported at load
+                     #   time by camel_tools.data, which morphology.database
+                     #   imports for its catalogue; never called by the harness
+docopt==0.6.2        # MIT — muddler's one dependency (CLI parsing, unused here)
+
+# --- Explicitly EXCLUDED (never installed into this venv). -----------------
+# These are the heavy and/or out-of-range deps that --no-deps keeps out. They
+# are listed here as a review anchor, not as installable requirements:
+#
+#   torch>=2.0            # out of scope; large; not on the analysis path
+#   transformers>=4.44.0  # out of scope; not on the analysis path
+#   scikit-learn>=1.8.0   # out of scope; not on the analysis path
+#   camel-kenlm           # NOT installed: avoids the Rust/C++ build and the
+#                         #   disambiguation LMs, which are out of range here
+#   numpy / pandas / scipy / dill / editdistance / future / tabulate
+#                         # pulled only by the above; not needed by analysis
+#
+# If a future task finds the analysis path imports one of these, add it to
+# the runtime list above with its license and a NOTICE check — do not relax
+# --no-deps.

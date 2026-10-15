@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "verbatimModuleSyntax": false,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "dist/cjs",
+    "rootDir": "src"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.property.test.ts",
+    "src/worker/web.ts",
+    "src/worker/node-import.ts",
+    "src/worker/entry-web.ts"
+  ]
+}
