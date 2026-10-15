@@ -107,7 +107,8 @@ origin of a committed file.
   that the data was adapted, and a pointer to the upstream warranty
   disclaimer (`disclaimer` field). Nothing may imply CAMeL Lab endorses
   shanisarf. The data package directory `packages/shanisarf-db-msa/` (the
-  compiled asset; not published) carries the attribution and citation
+  compiled asset, published as the npm package `shanisarf-db-msa`) carries
+  the attribution and citation
   below in its `NOTICE` and in its `source.json`, the Source_Record every
   manifest is built from; each compiled asset's `manifest.json` carries
   them as `credits` and `citation`, with `license`, `source`,
@@ -250,3 +251,17 @@ line's shape and string values before commit.
   `ANY` on a feature that does not accept it).
 - Obligation: attribution for the `db-forms` words, as for `db-forms`. No
   running text; every word passes `scan_text.py`.
+
+## Review
+
+The review the first npm publish requires (`docs/npm-first-publish.md`, R3):
+
+- 2026-10-13: the Camel Morph rows re-read against the `camel_morph` README
+  at the pinned commit.
+- 2026-10-15: the CAMeL Tools "What shanisarf takes" list matches the module
+  map in `docs/design.md`; `NOTICE`, `README.md` and every ported file's
+  notice agree that the upstream license lives at
+  `licenses/CAMEL_TOOLS_LICENSE`, and `LICENSE` holds shanisarf's own MIT
+  license only; the data package's `NOTICE` and README carry this file's
+  Camel Morph attribution and citation (`npm run check:invariants`,
+  `tests/package/data-package.test.ts`).

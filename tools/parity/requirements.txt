@@ -7,8 +7,9 @@
 # in the npm package: shanisarf's engine is TypeScript with zero runtime
 # dependencies (Requirements 14.3, 14.4). CAMeL Tools is MIT and already has
 # its NOTICE row; the support packages below are permissive (MIT / BSD /
-# Apache-2.0 / HPND) and, being developer-only build tooling, carry no
-# attribution obligation in the shipped artifact.
+# Apache-2.0 / HPND) apart from tqdm and certifi (MPL-2.0), and, being
+# developer-only build tooling that is never bundled or distributed, carry no
+# obligation in the shipped artifact.
 #
 # Build it with: npm run parity:setup  (see scripts/parity.mjs). The setup
 # step creates the venv, installs this file, and runs smoke_import.py to
@@ -53,6 +54,10 @@ regex==2026.9.29     # Apache-2.0 — Unicode-property regexes in utils/tokenize
 pyrsistent==0.20.0   # MIT — immutable structures used by the morphology model
 tqdm==4.70.1         # MPL-2.0+MIT (dual) — progress bars; MIT portion applies
 requests==2.34.2     # Apache-2.0 — used only by fetch_db.py (developer fetch)
+certifi==2026.7.22   # MPL-2.0 — requests' CA bundle; developer-only, never distributed
+charset-normalizer==3.5.2  # MIT — requests' dependency
+idna==3.20           # BSD-3-Clause — requests' dependency
+urllib3==2.8.0       # MIT — requests' dependency
 muddler==0.1.3       # MIT (Copyright 2020-2022 NYU Abu Dhabi) — imported at load
                      #   time by camel_tools.data, which morphology.database
                      #   imports for its catalogue; never called by the harness

@@ -55,18 +55,17 @@ describe('the data package directory', () => {
     expect(NOTICE_CITATION).toMatch(/^Khairallah, Christian, .* https:\/\/aclanthology\.org\/2024\.lrec-main\.240\.pdf$/u);
   });
 
-  it('holds its committed files, and package.json is data only, CC-BY-4.0, private', () => {
+  it('holds its committed files, and package.json is data only, CC-BY-4.0, publishable', () => {
     for (const file of ['package.json', 'README.md', 'NOTICE', 'source.json']) {
       expect(statSync(join(pkgDir, file)).isFile(), file).toBe(true);
     }
     const pkg = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8')) as Record<string, unknown>;
     expect(pkg['name']).toBe('shanisarf-db-msa');
     expect(pkg['version']).toMatch(/^1\.0\.\d+$/u);
-    expect(pkg['private']).toBe(true);
     expect(pkg['license']).toBe('CC-BY-4.0');
     expect(pkg['files']).toEqual(['asset', 'README.md', 'NOTICE']);
     expect(pkg['exports']).toEqual({ './asset/*': './asset/*', './package.json': './package.json' });
-    for (const absent of ['main', 'module', 'types', 'scripts', 'dependencies', 'peerDependencies', 'bin']) {
+    for (const absent of ['private', 'main', 'module', 'types', 'scripts', 'dependencies', 'peerDependencies', 'bin']) {
       expect(pkg, absent).not.toHaveProperty(absent);
     }
     expect(filesUnder(pkgDir).filter((f) => /\.(c|m)?[jt]s$/u.test(f))).toEqual([]);

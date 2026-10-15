@@ -24,6 +24,21 @@ differences:
 
 - **No version or tag yet.** Leave out `VER`, `TAG`, the stable-version
   check, `BRANCH` and `GITTAG`. §4 adds them once the user has chosen.
+- **One package per run.** `PKG` is the package being released. Leave out
+  `DBPKG`, `DBVER` and `DBGITTAG`, but keep `PKGDIR`: §2.5 compiles the
+  asset in every run, because G12 loads it.
+  - **`shanisarf`:** leave out the data package's bump in §2.1, the D gate,
+    and the data package's parts of §5 to §8. §7's fresh install still
+    loads a published database: before it, set `DBPKG=shanisarf-db-msa`
+    and `DBVER` to the version in `$REL/$PKGDIR/package.json`.
+  - **`shanisarf-db-msa`:** also set `DBPKG=$PKG`. §4 sets `DBVER=$VER` and
+    `DBGITTAG=$GITTAG` too, so the first-publish steps for the data package
+    read their usual variables: the bump in `$PKGDIR`, the D gate, and the
+    data package's parts of §5 to §8. G1 to G8 still run, since they prove
+    the code that reads the asset. Leave out G9 to G12 and `shanisarf`'s
+    dry run, publish, log entry and tag.
+  - **Both changed** (a new asset format version, say): run this runbook
+    once per package, the data package first, as in the first publish.
 - **What it names instead:**
   - `PKG`;
   - `LAST=$(npm view "$PKG" dist-tags.latest --registry https://registry.npmjs.org/)`;
@@ -55,8 +70,10 @@ differences:
    `npm view "$PKG@$LAST" dist.integrity --registry "$REG"` equals the
    logged `integrity`.
 3. **Readiness, re-checked at `CAND`.** `npm-first-publish.md` §1 holds,
-   and so do its rows R1, R3, R5, R6 and R8. R4 holds for every package that
-   §1 below puts in class L. The R4 rulings already in the log still stand.
+   and so do its rows R1, R3, R5, R6 and R8, for `PKG`. R4 holds for every
+   package that §1 below puts in class L: nothing committed, bundled or
+   distributed is out of range, and every out-of-range development tool is
+   on the development-only list.
 4. **Committed only.** Uncommitted and untracked files are never part of a
    release, whoever made them.
 
@@ -105,7 +122,9 @@ The machinery that certifies parity.
 
 ### P, pins
 
-- **Paths:** the CAMeL Tools version (`requirements.txt` and the notices),
+- **Paths:** the CAMeL Tools version (the install line in
+  `scripts/parity.mjs`, the comments in `requirements.txt`, and the
+  notices),
   the database (`tools/parity/fetch_db.py`, `packages/shanisarf-db-msa/source.json`),
   the charmap source, and the toolchain pins.
 - **Requirement:**
@@ -247,7 +266,7 @@ Wait for a clear answer on each. Then append to `release.env`: `VER`,
      || git -C "$REL" switch -c "$BRANCH"
    ```
    Then do `npm-first-publish.md` §2.1–§2.2 (bump, CHANGELOG, commit,
-   `RELSHA`), and again §2.3–§2.4 (regenerate and check).
+   `RELSHA`), and again §2.3–§2.5 (regenerate, check, compile the asset).
 2. **Liveness and gate.** Run `npm-first-publish.md` §3 (the liveness
    break), then §4 (the gate).
 3. **Nothing lost.** In G5, every fixture's compared-case count equals the
@@ -283,10 +302,12 @@ Remind the user that `$BRANCH` must be merged into `main`, with its history
 intact, before the next release.
 
 A `shanisarf-db-msa` release follows the same steps, with the data-package
-differences in `npm-first-publish.md`. Its version follows the database. A
-new database is a class P change: a new `source.json`, a new expected
-digest, regenerated fixtures and a regenerated typed-features module, each
-recorded before any release.
+parts named under Run state. Its version follows the database (the release
+decisions in `npm-first-publish.md`). A new database is a class P change: a
+new `source.json`, a new expected digest, regenerated fixtures and a
+regenerated typed-features module, each recorded before any release. A new
+asset format version is breaking for `shanisarf` (§4), and the data package
+that carries it goes out first.
 
 ## 7. Report
 
@@ -304,7 +325,8 @@ recorded before any release.
 - The registry's integrity for `LAST` differs from the log.
 - A class A change or a loosened release decision isn't approved, or
   loosens the gate without a recorded reason.
-- A class L package is out of range.
+- A class L package that is committed, bundled or distributed is out of
+  range.
 - A class P change has no record.
 - A default-on output change.
 - A fixture count changed that nothing names.

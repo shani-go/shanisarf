@@ -27,18 +27,18 @@ The database ships compiled: a `manifest.json` and two shards, 6.1 MB in
 all, which `loadDatabase` reads, checks (every shard's SHA-256 and every
 table's structure) and opens into the model. It requests the manifest and
 the shards it names, and nothing else. The data package
-`shanisarf-db-msa` (unpublished; `npm run compile:db` builds
-it into `packages/shanisarf-db-msa/asset/`) holds the Camel Morph MSA
-asset.
+`shanisarf-db-msa` holds the Camel Morph MSA asset (in this repository,
+`npm run compile:db` builds it into `packages/shanisarf-db-msa/asset/`).
 
 In a page, pass the asset's directory URL and its digest, the SHA-256 of
-its `manifest.json`, which the data package publishes. The loader then
-refuses any other asset, whoever serves it:
+its `manifest.json`, which the data package publishes. jsDelivr mirrors the
+npm package, so a page can load the asset from there without a server of
+its own. The loader refuses any other asset, whoever serves it:
 
 ```js
 import { loadDatabase, Analyzer } from 'shanisarf';
 
-const db = await loadDatabase('https://cdn.example/shanisarf-db-msa@1.0.0/asset/', {
+const db = await loadDatabase('https://cdn.jsdelivr.net/npm/shanisarf-db-msa@1.0.0/asset/', {
   manifestSha256: '7523fca351c45ac82d6a002c4013f393cf0a758b4c08cde8b8f27c2fb54c782e',
 });
 const analyzer = new Analyzer(db);
@@ -241,10 +241,14 @@ module is generated from the database (`npm run gen:features`) and carries
 its attribution. An analysis from a special path can carry a value outside
 a set: `pos` `foreign` and `source` `punc`.
 
-## Installing from this repository
+## Installing
 
-Until a release is published, install from a clone, a git URL or a
-tarball:
+```sh
+npm install shanisarf shanisarf-db-msa
+```
+
+`shanisarf-db-msa` is the database; skip it if you serve the asset from
+elsewhere or compile your own. To install an unreleased state, use a clone, a git URL or a tarball:
 
 ```sh
 # a path: a linked directory runs no install script, so dist/ must be built in the clone
@@ -252,18 +256,18 @@ tarball:
 npm install ../shanisarf
 
 # a git URL: npm clones it, installs its devDependencies and runs `prepare`, which builds
-npm install git+ssh://git@example.org/you/shanisarf.git
+npm install github:shani-go/shanisarf
 
 # a tarball
 (cd ../shanisarf && npm pack)
-npm install ../shanisarf/shanisarf-0.0.0.tgz
+npm install ../shanisarf/shanisarf-<version>.tgz
 ```
 
 `prepare` runs `npm run build`, so in this repository every bare
 `npm install` or `npm ci` builds, and so does `npm pack`. The package has
-no runtime dependencies. The database is a separate package
-(`packages/shanisarf-db-msa`, `npm run compile:db`). Copy its `asset/`
-directory where the page can fetch it, or load it by path in Node.
+no runtime dependencies. In a clone, the database package is
+`packages/shanisarf-db-msa`, built by `npm run compile:db`. Copy its
+`asset/` directory where the page can fetch it, or load it by path in Node.
 
 `npm run check:consumer` proves the three installs. It packs the package,
 installs it offline into scratch consumers by tarball, by `git+file://` at

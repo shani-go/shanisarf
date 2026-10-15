@@ -1,18 +1,23 @@
 # Upstream sync runbook
 
 Bringing the port up to a newer CAMeL Tools release. Run top to bottom;
-every step ends in a check. `OLD` is the pin in
-`tools/parity/requirements.txt`, `NEW` the target release, `$SCRATCH` a
-directory outside the repository. Work on a branch and commit locally. At
-any ⛔, stop, leave the branch as it is, and report.
+every step ends in a check. `OLD` is the pin on the `--no-deps` install
+line in `scripts/parity.mjs` (`tools/parity/requirements.txt` names it only
+in a comment, since a requirement line would pull camel-tools' whole
+dependency tree), `NEW` the target release, `$SCRATCH` a directory outside
+the repository. Work on a branch and commit locally. At any ⛔, stop, leave
+the branch as it is, and report.
 
 ```bash
-OLD=$(sed -n 's/^camel-tools==//p' tools/parity/requirements.txt)
+OLD=$(grep -oE 'camel-tools==[0-9][0-9.]*' scripts/parity.mjs | head -1 | sed 's/^camel-tools==//')
 NEW=$(curl -s https://pypi.org/pypi/camel-tools/json | python3 -I -c 'import json,sys; print(json.load(sys.stdin)["info"]["version"])')
+[ -n "$OLD" ] || echo "⛔ no camel-tools pin in scripts/parity.mjs" >&2
+[ -n "$NEW" ] || echo "⛔ no camel-tools version from PyPI" >&2
 ```
 
 ## 0. Preconditions and baseline
 
+- `OLD` and `NEW` are both non-empty, else ⛔.
 - `git status --porcelain` is empty; `git switch -c upstream/camel-tools-$NEW`.
 - `NEW` differs from `OLD`.
 - The venv holds `OLD` and the database is present (`npm run parity:setup`
@@ -109,12 +114,17 @@ upstream raises. Where a hunk lands:
 grep -rn "$OLD" --exclude-dir=node_modules --exclude-dir=.venv --exclude-dir=dist --exclude-dir=__pycache__ . | grep -v package-lock
 ```
 
-`tools/parity/requirements.txt`, the install line in `scripts/parity.mjs`,
-`EXPECTED_VERSION` in `tools/parity/smoke_import.py`,
-`EXPECTED_CAMEL_TOOLS_VERSION` in `tools/parity/generate.py`,
-`UPSTREAM_VERSION` in `tools/gen-charmaps.ts`, every ported-code notice
-(`grep -rl 'Ported from CAMeL Tools' src tools`, then regenerate the
-charmaps), `NOTICE`, `README.md` and `docs/design.md`. Check:
+The `--no-deps` install line in `scripts/parity.mjs` (the pin itself), the
+version in the comments of `tools/parity/requirements.txt` (camel-tools
+stays out of its requirement lines), `EXPECTED_VERSION` in
+`tools/parity/smoke_import.py`, `EXPECTED_CAMEL_TOOLS_VERSION` in
+`tools/parity/generate.py`, `UPSTREAM_VERSION` in `tools/gen-charmaps.ts`,
+every ported-code notice (`grep -rl 'Ported from CAMeL Tools' src tools`,
+then regenerate the charmaps), `NOTICE`, `README.md` and `docs/design.md`.
+Check: `grep -oE 'camel-tools==[0-9][0-9.]*' scripts/parity.mjs` prints
+`camel-tools==$NEW` and nothing else;
+`grep -E '^[[:space:]]*camel-tools' tools/parity/requirements.txt` prints
+nothing; and
 `grep -rn 'Ported from CAMeL Tools' src tools | grep -v -e "version $NEW" -e '^tools/gen-charmaps.ts:'`
 prints nothing.
 
@@ -151,7 +161,7 @@ per fixture, the test output, out-of-scope upstream changes, and any ⛔.
 
 ## Stop conditions (⛔)
 
-The license is not MIT, or the LICENSE changed beyond its years. A new
+`OLD` or `NEW` cannot be read. The license is not MIT, or the LICENSE changed beyond its years. A new
 in-scope dependency outside MIT, BSD or Apache-2.0. The analysis path needs
 `camel_data`, a model, `camel-kenlm` or a built-in database. The database no
 longer loads unmodified on `NEW`. An in-scope hunk cannot be ported within

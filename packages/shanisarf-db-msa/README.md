@@ -4,9 +4,12 @@ The Camel Morph MSA v1.0 morphological database of Modern Standard Arabic,
 compiled into shanisarf's asset format, for shanisarf's
 `loadDatabase`. This package is data only: it ships no code.
 
-> **Status: not yet published.** The package is `private` until shanisarf's
-> 0.1.0 release. Its compiled `asset/` is built by
-> `npm run compile:db` in the shanisarf repository and is not committed.
+```sh
+npm install shanisarf shanisarf-db-msa
+```
+
+In the shanisarf repository, the compiled `asset/` is built by
+`npm run compile:db` and is not committed.
 
 ## Attribution
 
@@ -47,12 +50,12 @@ two shards it names, checks every shard's SHA-256 and every table's
 structure, and builds the database. It requests nothing else.
 
 In a page, from a CDN or your own server, pass the asset digest (below) so
-the loader refuses any other asset:
+the loader refuses any other asset. jsDelivr mirrors this package from npm:
 
 ```js
 import { loadDatabase, Analyzer } from 'shanisarf';
 
-const db = await loadDatabase('https://cdn.example/shanisarf-db-msa@1.0.0/asset/', {
+const db = await loadDatabase('https://cdn.jsdelivr.net/npm/shanisarf-db-msa@1.0.0/asset/', {
   manifestSha256: '<the asset digest of this release>',
 });
 const analyzer = new Analyzer(db);
@@ -103,7 +106,7 @@ A new asset Format_Version is a new patch release.
 
 | Format_Version | Package versions | shanisarf versions that read it |
 |---|---|---|
-| 1 | 1.0.0 | 0.1.0 and later (unreleased) |
+| 1 | 1.0.0 | 0.1.0 and later |
 
 Each release's asset digest, the SHA-256 of its `manifest.json`, is in the
 shanisarf repository's `packages/shanisarf-db-msa/asset-digest.json`. Pass

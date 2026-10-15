@@ -40,12 +40,16 @@ These hold on every commit.
    CC0 or CC BY. CC BY-SA material may be consulted and cited and may drive a
    local test from the git-ignored `data/`, but nothing derived from it is
    committed or packaged. Nothing under GPL, LGPL, AGPL, MPL, LDC,
-   non-commercial, research-only or unknown terms enters the repository,
-   the build, the tests or a comment "for reference". That includes CAMeL
-   Tools' own `camel_data` databases and its MLE disambiguator model. A
-   value upstream derived from restricted data and published under an
-   in-range license is in range on the licensor's statement; `NOTICE`
-   records the case (the Camel Morph scores).
+   non-commercial, research-only or unknown terms is committed, bundled or
+   distributed: not in the repository, a published package or a comment
+   "for reference". That includes CAMeL Tools' own `camel_data` databases
+   and its MLE disambiguator model, which also never drive a test or a
+   fixture. Development tools that run only on a developer's machine (npm
+   devDependencies, the parity venv) are outside the range when nothing of
+   theirs is committed, bundled or distributed; the release runbooks list
+   their licenses. A value upstream derived from restricted data and
+   published under an in-range license is in range on the licensor's
+   statement; `NOTICE` records the case (the Camel Morph scores).
 2. **No copyrighted running text,** not a line, in any file. Test words come
    from the database, from a word list recorded in `NOTICE`, or are
    invented.
@@ -68,7 +72,8 @@ These hold on every commit.
 ## Bringing in a third-party input
 
 Before any code, data, word list, model or text touches the repository, the
-build, the tests or a demo:
+build, the tests or a demo (a development tool that is never committed,
+bundled or distributed is not an input; see invariant 1):
 
 1. Identify the license from the source's own LICENSE file or data-license
    statement, not from a package index or a badge. Record where you read it.

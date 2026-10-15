@@ -7,7 +7,9 @@ a change must keep. This document explains what is there.
 ## Glossary
 
 - **Upstream**: CAMeL Tools 1.6.0, the Python implementation the engine
-  reproduces, pinned in `tools/parity/requirements.txt`.
+  reproduces, pinned on the `--no-deps` install line in
+  `scripts/parity.mjs` (`tools/parity/requirements.txt` pins its
+  analysis-path dependencies).
 - **The pin**: the Camel Morph MSA v1.0 database, commit `15f5aede`, SHA-256
   `110e03ba…0b8f60`, 84,959,404 bytes, fetched by `tools/parity/fetch_db.py`
   into the git-ignored `data/`.

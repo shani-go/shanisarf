@@ -1,9 +1,16 @@
 {
   "name": "shanisarf",
   "version": "0.0.0",
-  "private": true,
   "description": "Arabic morphological analyzer for JavaScript: a TypeScript port of the analysis core of CAMeL Tools over the Camel Morph MSA database.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shani-go/shanisarf.git"
+  },
+  "homepage": "https://github.com/shani-go/shanisarf#readme",
+  "bugs": {
+    "url": "https://github.com/shani-go/shanisarf/issues"
+  },
   "type": "module",
   "engines": {
     "node": ">=20"
@@ -38,7 +45,10 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "NOTICE",
+    "licenses",
+    "CHANGELOG.md"
   ],
   "sideEffects": false,
   "scripts": {

@@ -11,8 +11,8 @@
 //
 // Without the Database_Pin it skips with the parity notice and exits 0, as
 // the replays do. It needs `npm run build` first (compile:db reads dist/).
-// The release runbook's G12 sets SHANISARF_PARITY_ASSET to an installed
-// tarball's Asset instead, and runs the replays the same way.
+// The first-publish runbook's D3 sets SHANISARF_PARITY_ASSET to the packed
+// data package's Asset instead, and runs the replays the same way.
 //
 // This is a new-design developer script: project header only, no ported-code
 // notice.
