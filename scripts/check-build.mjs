@@ -40,6 +40,13 @@
 //      dist/, so maps left by an earlier build fail this until `npm run
 //      clean`.
 //
+// For the ported-code notice (CONTRIBUTING.md):
+//
+//  11. every source under src/engine/ that opens with the notice has it at
+//      the top of its ESM `.js`, its CJS `.js` (below `"use strict"`) and
+//      its `.d.ts`. tsc drops
+//      the notice from declarations; write-dts-notices.mjs puts it back.
+//
 // REPORT-ONLY: it reads dist/ and package.json, starts two short-lived
 // workers, writes and removes one temporary directory, prints what it finds,
 // and edits nothing in the repository. Exit 0 when every check passes, 1
@@ -295,6 +302,25 @@ check(
   built.length > 0 && maps.length === 0 && naming.length === 0,
   'dist/ holds no source map and no .js names one',
   maps.length + naming.length === 0 ? `${built.length} files` : `${maps.length} .map files, ${naming.length} .js naming one; left by an earlier build? npm run clean, then npm run build`,
+);
+
+// 11: the ported-code notice in every output of a ported module.
+const NOTICE = '// Ported from CAMeL Tools';
+const engineSrc = join(root, 'src', 'engine');
+const portedSources = existsSync(engineSrc)
+  ? filesUnder(engineSrc).filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts') && readFileSync(f, 'utf8').startsWith(NOTICE))
+  : [];
+const lacking = portedSources.flatMap((src) => {
+  const stem = relative(engineSrc, src).replace(/\.ts$/u, '');
+  return [`dist/esm/engine/${stem}.js`, `dist/cjs/engine/${stem}.js`, `dist/engine/${stem}.d.ts`].filter(
+    // tsc's CommonJS output puts "use strict" above the file's comments.
+    (out) => !has(out) || !readFileSync(join(root, out), 'utf8').replace(/^"use strict";\n/u, '').startsWith(NOTICE),
+  );
+});
+check(
+  portedSources.length > 0 && lacking.length === 0,
+  'every ported module\'s ESM, CJS and .d.ts output starts with the ported-code notice',
+  lacking.length === 0 ? `${portedSources.length} modules, ${portedSources.length * 3} files` : `${lacking.length} lacking: ${lacking.slice(0, 5).join(', ')}${lacking.length > 5 ? ', …' : ''}`,
 );
 
 console.log(failures.length === 0 ? '\ncheck:build — all checks passed.' : `\ncheck:build — ${failures.length} check(s) failed.`);
