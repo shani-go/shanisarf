@@ -1,6 +1,6 @@
 {
   "name": "shanisarf",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Arabic morphological analyzer for JavaScript: a TypeScript port of the analysis core of CAMeL Tools over the Camel Morph MSA database.",
   "license": "MIT",
   "repository": {
