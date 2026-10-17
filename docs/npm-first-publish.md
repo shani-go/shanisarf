@@ -318,6 +318,9 @@ The worktree gets no `.venv`, not even as a symlink. A symlink shows as
 untracked, because `.gitignore`'s `tools/**/.venv/` matches directories
 only. Tools that need the venv run the main tree's interpreter with `-I` on
 the worktree's scripts, which derive every path from their own location.
+The two npm scripts that start Python themselves, `check:invariants` and
+`bench`, take that interpreter from `SHANISARF_PARITY_PYTHON`; §4 sets it
+for G3 and G8.
 `npm ci` runs `prepare`, which builds `dist/`; §4 rebuilds it from clean.
 
 ### 2.1 Version
@@ -439,12 +442,12 @@ check. Several tools exit 0 when they skip:
 |---|---|
 | G1 tree | It runs in the release worktree: not the main tree, on branch `$BRANCH`, with HEAD at `RELSHA` and a clean `git status --porcelain`. |
 | G2 static | `npm run typecheck`, and `npm run lint -- --max-warnings=0`. |
-| G3 invariants | `npm run check:invariants` exits 0, prints `scan_text:  OK`, and prints no `SKIPPED`. |
+| G3 invariants | `SHANISARF_PARITY_PYTHON="$MAIN/tools/parity/.venv/bin/python" npm run check:invariants` exits 0, prints `scan_text:  OK`, and prints no `SKIPPED`. Without the variable, `scan_text` would fall back to a system `python3`. |
 | G4 build | `npm run clean && npm run build` exits 0; `check:build` reports every check ok, including that `dist/` holds no source map. |
 | G5 tests | `CI=1 npx vitest run --reporter=json --outputFile="$OUT/test.json"` shows `success`, 0 failed tests and suites, 0 pending and 0 todo. The parity replays ran: their test counts are non-zero and the per-fixture case counts in the output match `$OUT/generate.log`. All 21 charmap JSON files are present. |
 | G6 asset | `npm run parity:asset` compiles the database and replays every fixture over the asset: it prints that every fixture passed. |
 | G7 facts | `npm run measure:db` prints that every table count matched, and its parse time and retained memory are within the threshold of the README's table. |
-| G8 performance | `npm run bench` runs to the end (every setup agrees on the analysis counts) and its µs/word rows are within the threshold of the README's table. |
+| G8 performance | `SHANISARF_PARITY_PYTHON="$MAIN/tools/parity/.venv/bin/python" npm run bench` runs to the end (every setup agrees on the analysis counts) and its µs/word rows are within the threshold of the README's table. |
 | G9 pack | `npm pack --pack-destination "$OUT" --json > "$OUT/pack.json"` runs exactly once. **Required** in the file list: `package.json`, `README.md`, `LICENSE`, `NOTICE`, `CHANGELOG.md`, `licenses/CAMEL_TOOLS_LICENSE`, `dist/**`. **Forbidden:** anything from `src/`, `tests/`, `tools/`, `fixtures/`, `data/`, `docs/` or `packages/`; `.env`; `.npmrc`; any test file; any `.map`. Packed size at most 300 kB. |
 | G10 contents | Checked in the extracted tarball under `$OUT/x`. **Manifest:** R8 holds for the shipped `package.json`, and its `version` is `VER`. **Notices:** every ported engine module's ESM `.js`, CJS `.js` and `.d.ts` carries the `Ported from CAMeL Tools` notice (the files `scripts/check-invariants.mjs` does not exempt). **Names:** `camel` and `calima`, matched case-insensitively, appear in no package name, `exports` key, export name or tarball path other than `licenses/CAMEL_TOOLS_LICENSE`. **Network:** `grep -rlE 'fetch\(|XMLHttpRequest|WebSocket|importScripts' dist` names only the loader's read modules. **README:** it carries the CAMeL Tools copyright line, the Camel Morph CC BY 4.0 attribution with the license URL, and links to `NOTICE` and the license files that resolve on npmjs.com. Its asset URL names `shanisarf-db-msa` at the version in `$PKGDIR/package.json`, its `manifestSha256` example equals `assetDigest` in `$PKGDIR/asset-digest.json`, and it tells users to install `shanisarf-db-msa`. Nothing implies that CAMeL Lab endorses shanisarf. |
 | G11 types | In `$OUT/types`, `npx --yes publint --strict "$OUT/$PKG-$VER.tgz"` and `npx --yes @arethetypeswrong/cli --profile node16 "$OUT/$PKG-$VER.tgz"` report nothing for node16-CJS, node16-ESM or bundler, and attw does not say the package has no types. Record the versions npx resolved; they are tools run in a scratch directory, not inputs to the repository. |

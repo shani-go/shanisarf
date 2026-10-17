@@ -24,8 +24,12 @@
 // engines that disagree means nothing.
 //
 // Like measure:db, this skips with a notice and exits 0 when the database or
-// the parity venv is absent. The service and the static server bind
-// 127.0.0.1 only; the script makes no other network calls.
+// the parity venv is absent. SHANISARF_PARITY_PYTHON, when set, names the
+// venv's interpreter instead: a release worktree has no venv of its own and
+// points this at the main tree's (docs/npm-first-publish.md §4). A path that
+// does not exist then fails the run rather than skipping it. The service and
+// the static server bind 127.0.0.1 only; the script makes no other network
+// calls.
 //
 // This is a new-design developer script: project header only, no ported-code
 // notice.
@@ -93,10 +97,12 @@ const distDir = join(repoRoot, 'dist');
 const builtIndex = join(distDir, 'esm', 'index.js');
 const wordlistDir = join(repoRoot, 'fixtures', 'wordlists');
 const benchPy = join(repoRoot, 'tools', 'parity', 'bench_reference.py');
+const pythonOverride = process.env['SHANISARF_PARITY_PYTHON'] || undefined;
 const venvPython =
-  process.platform === 'win32'
+  pythonOverride ??
+  (process.platform === 'win32'
     ? join(repoRoot, 'tools', 'parity', '.venv', 'Scripts', 'python.exe')
-    : join(repoRoot, 'tools', 'parity', '.venv', 'bin', 'python');
+    : join(repoRoot, 'tools', 'parity', '.venv', 'bin', 'python'));
 const measureDbScript = join(repoRoot, 'scripts', 'measure-db.mjs');
 const builtNodeIndex = join(distDir, 'esm', 'index-node.js');
 const builtCompile = join(distDir, 'esm', 'compile', 'index.js');
@@ -932,6 +938,10 @@ async function main() {
     return;
   }
   if (!existsSync(dbPath)) skip('the Database_Pin is not present.', '      npm run parity:setup      # fetches the DB into data/');
+  if (pythonOverride !== undefined && !existsSync(pythonOverride)) {
+    console.error(`\nbench — SHANISARF_PARITY_PYTHON names ${pythonOverride}, which does not exist.\n`);
+    process.exit(1);
+  }
   if (!existsSync(venvPython)) skip('the parity venv is not present.', '      npm run parity:setup      # builds tools/parity/.venv');
   if (!existsSync(builtIndex)) {
     console.error(`\nbench — the built engine was not found at ${builtIndex}. Run \`npm run build\` first.\n`);

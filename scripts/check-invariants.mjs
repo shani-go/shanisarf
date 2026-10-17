@@ -57,11 +57,14 @@
 // Usage:
 //   node scripts/check-invariants.mjs      # or: npm run check:invariants
 //
-// The scan_text sub-check needs a Python 3 interpreter. It prefers the parity
-// venv's interpreter (tools/parity/.venv) when present, else a system
-// `python3`/`python`. When no interpreter is found it reports scan_text as
-// SKIPPED (not a failure) and still runs the other checks, so the guard
-// is useful on a machine without the venv.
+// The scan_text sub-check needs a Python 3 interpreter. SHANISARF_PARITY_PYTHON,
+// when set, names it: a release worktree has no venv of its own and points
+// this at the main tree's (docs/npm-first-publish.md §4), and a path that
+// does not exist fails the check rather than skipping it. Otherwise it
+// prefers the parity venv's interpreter (tools/parity/.venv) when present,
+// else a system `python3`/`python`. When no interpreter is found it reports
+// scan_text as SKIPPED (not a failure) and still runs the other checks, so
+// the guard is useful on a machine without the venv.
 
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -188,7 +191,13 @@ function checkScanText() {
     return { status: 'skip', issues };
   }
 
-  const python = findPython();
+  const override = process.env['SHANISARF_PARITY_PYTHON'];
+  if (override !== undefined && override !== '' && !existsSync(override)) {
+    console.log(`scan_text:  FAIL — SHANISARF_PARITY_PYTHON names ${override}, which does not exist.`);
+    issues.push(`SHANISARF_PARITY_PYTHON names ${override}, which does not exist.`);
+    return { status: 'fail', issues };
+  }
+  const python = override !== undefined && override !== '' ? override : findPython();
   if (!python) {
     console.log(
       'scan_text:  SKIPPED — no Python 3 interpreter found (looked for the ' +

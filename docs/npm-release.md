@@ -277,8 +277,10 @@ Wait for a clear answer on each. Then append to `release.env`: `VER`,
    CommonJS; the fixtures prove `src/`, and G4's build is what the tarball
    holds.
 5. **Performance work.** If the change touches the engine's speed or
-   memory, `src/engine/result-key-order.test.ts` passes and `npm run bench`
-   is compared with the README's table and the log's figures for `LAST`.
+   memory, `src/engine/result-key-order.test.ts` passes and G8's
+   `npm run bench` (with `SHANISARF_PARITY_PYTHON` set, as in
+   `npm-first-publish.md` §4) is compared with the README's table and the
+   log's figures for `LAST`.
 6. **A parity failure is a port bug** (`CONTRIBUTING.md`). ⛔, and report
    the first failing word, mode, `firstDiff` index and both values. Never
    regenerate, edit a fixture, or touch class A files to make the run
