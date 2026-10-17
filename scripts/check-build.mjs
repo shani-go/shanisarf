@@ -23,7 +23,10 @@
 //   7. `.` resolves under `node` (`import`, `require`) to the Node entries,
 //      by self-reference, and, by the exports map's conditions, under
 //      `import` and `require` without `node` to the browser entries;
-//      `./compile` resolves under `node` only, and the types exist;
+//      `./compile` resolves under `node` only; and, for TypeScript, each
+//      entry's `import` branches resolve to the ESM declarations and its
+//      `require` branches to the CJS ones under dist/cjs/ (whose
+//      package.json makes them CommonJS), and every one exists;
 //   8. the browser graphs (dist/esm/index.js, dist/esm/worker/web.js and
 //      dist/esm/worker/entry-web.js) reach no `node:` module and no bare
 //      specifier;
@@ -44,7 +47,7 @@
 //
 //  11. every source under src/engine/ that opens with the notice has it at
 //      the top of its ESM `.js`, its CJS `.js` (below `"use strict"`) and
-//      its `.d.ts`. tsc drops
+//      both its `.d.ts` files. tsc drops
 //      the notice from declarations; write-dts-notices.mjs puts it back.
 //
 // REPORT-ONLY: it reads dist/ and package.json, starts two short-lived
@@ -115,8 +118,8 @@ if (exportsWorker === undefined) {
   check(false, 'package.json exports ./worker');
 } else {
   // 1 and 2: the node conditions, by self-reference.
-  const esmPath = resolve(root, exportsWorker.node.import);
-  const cjsPath = resolve(root, exportsWorker.node.require);
+  const esmPath = resolve(root, target(exportsWorker, ['node', 'import']) ?? '-');
+  const cjsPath = resolve(root, target(exportsWorker, ['node', 'require']) ?? '-');
   let resolvedImport = null;
   try {
     resolvedImport = fileURLToPath(import.meta.resolve('shanisarf/worker'));
@@ -230,7 +233,23 @@ expectTarget(dot, ['browser', 'require'], './dist/cjs/index.js', '. resolves und
 expectTarget(compile, ['node', 'import'], './dist/esm/compile/index.js', './compile resolves under node + import');
 expectTarget(compile, ['node', 'require'], './dist/cjs/compile/index.js', './compile resolves under node + require');
 expectTarget(compile, ['browser', 'import'], null, './compile does not resolve without node');
-check(existsSync(resolve(root, dot?.types ?? '-')) && existsSync(resolve(root, compile?.types ?? '-')), 'the . and ./compile types exist');
+const worker = pkg.exports?.['./worker'];
+const typesFor = [
+  [dot, ['types', 'node', 'import'], './dist/index.d.ts', '. types under node + import are the ESM declarations'],
+  [dot, ['types', 'node', 'require'], './dist/cjs/index.d.ts', '. types under node + require are the CJS declarations'],
+  [dot, ['types', 'import'], './dist/index.d.ts', '. types under import (bundler) are the ESM declarations'],
+  [dot, ['types', 'require'], './dist/cjs/index.d.ts', '. types under require without node are the CJS declarations'],
+  [compile, ['types', 'node', 'import'], './dist/compile/index.d.ts', './compile types under node + import are the ESM declarations'],
+  [compile, ['types', 'node', 'require'], './dist/cjs/compile/index.d.ts', './compile types under node + require are the CJS declarations'],
+  [compile, ['types', 'import'], './dist/compile/index.d.ts', './compile types under import (bundler) are the ESM declarations'],
+  [worker, ['types', 'node', 'import'], './dist/worker/client.d.ts', './worker types under node + import are the ESM declarations'],
+  [worker, ['types', 'node', 'require'], './dist/cjs/worker/client.d.ts', './worker types under node + require are the CJS declarations'],
+  [worker, ['types', 'import'], './dist/worker/client.d.ts', './worker types under import (bundler) are the ESM declarations'],
+];
+for (const [entry, conditions, want, label] of typesFor) expectTarget(entry, conditions, want, label);
+const typeFiles = [...new Set(typesFor.map(([, , want]) => want))];
+const absentTypes = typeFiles.filter((path) => !existsSync(resolve(root, path)));
+check(absentTypes.length === 0, 'every types target exists', absentTypes.length === 0 ? `${typeFiles.length} files` : absentTypes.join(', '));
 const requireHere = createRequire(import.meta.url);
 let selfImport;
 let selfRequire;
@@ -312,7 +331,7 @@ const portedSources = existsSync(engineSrc)
   : [];
 const lacking = portedSources.flatMap((src) => {
   const stem = relative(engineSrc, src).replace(/\.ts$/u, '');
-  return [`dist/esm/engine/${stem}.js`, `dist/cjs/engine/${stem}.js`, `dist/engine/${stem}.d.ts`].filter(
+  return [`dist/esm/engine/${stem}.js`, `dist/cjs/engine/${stem}.js`, `dist/engine/${stem}.d.ts`, `dist/cjs/engine/${stem}.d.ts`].filter(
     // tsc's CommonJS output puts "use strict" above the file's comments.
     (out) => !has(out) || !readFileSync(join(root, out), 'utf8').replace(/^"use strict";\n/u, '').startsWith(NOTICE),
   );
@@ -320,7 +339,7 @@ const lacking = portedSources.flatMap((src) => {
 check(
   portedSources.length > 0 && lacking.length === 0,
   'every ported module\'s ESM, CJS and .d.ts output starts with the ported-code notice',
-  lacking.length === 0 ? `${portedSources.length} modules, ${portedSources.length * 3} files` : `${lacking.length} lacking: ${lacking.slice(0, 5).join(', ')}${lacking.length > 5 ? ', …' : ''}`,
+  lacking.length === 0 ? `${portedSources.length} modules, ${portedSources.length * 4} files` : `${lacking.length} lacking: ${lacking.slice(0, 5).join(', ')}${lacking.length > 5 ? ', …' : ''}`,
 );
 
 console.log(failures.length === 0 ? '\ncheck:build — all checks passed.' : `\ncheck:build — ${failures.length} check(s) failed.`);

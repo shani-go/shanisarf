@@ -17,27 +17,50 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "node": {
-        "import": "./dist/esm/index-node.js",
-        "require": "./dist/cjs/index-node.js"
+        "import": {
+          "types": "./dist/index.d.ts",
+          "default": "./dist/esm/index-node.js"
+        },
+        "require": {
+          "types": "./dist/cjs/index.d.ts",
+          "default": "./dist/cjs/index-node.js"
+        }
       },
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
-    "./compile": {
-      "types": "./dist/compile/index.d.ts",
-      "node": {
-        "import": "./dist/esm/compile/index.js",
-        "require": "./dist/cjs/compile/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
       }
     },
-    "./worker": {
-      "types": "./dist/worker/client.d.ts",
+    "./compile": {
       "node": {
-        "import": "./dist/esm/worker/node-import.js",
-        "require": "./dist/cjs/worker/node-require.js"
+        "import": {
+          "types": "./dist/compile/index.d.ts",
+          "default": "./dist/esm/compile/index.js"
+        },
+        "require": {
+          "types": "./dist/cjs/compile/index.d.ts",
+          "default": "./dist/cjs/compile/index.js"
+        }
       },
+      "types": "./dist/compile/index.d.ts"
+    },
+    "./worker": {
+      "node": {
+        "import": {
+          "types": "./dist/worker/client.d.ts",
+          "default": "./dist/esm/worker/node-import.js"
+        },
+        "require": {
+          "types": "./dist/cjs/worker/client.d.ts",
+          "default": "./dist/cjs/worker/node-require.js"
+        }
+      },
+      "types": "./dist/worker/client.d.ts",
       "default": "./dist/esm/worker/web.js"
     }
   },

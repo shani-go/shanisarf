@@ -3,13 +3,14 @@
 //
 // Carries the ported-code notice into the declaration files. tsc keeps a
 // file's leading `//` comments in the ESM and CJS builds but drops them from
-// the `.d.ts` it emits, so dist/engine/**/*.d.ts would ship without the
-// notice CONTRIBUTING.md requires on every ported file. For each source under
-// src/engine/ whose first line is the notice, this prepends the same notice
-// block (its leading `//` lines, up to the first bare `//`) to the matching
-// declaration file. A declaration that already starts with it is left alone,
-// so running it twice changes nothing. Part of `npm run build`, after
-// `build:types`; check-build.mjs then checks all three outputs.
+// the `.d.ts` it emits, so dist/engine/**/*.d.ts and dist/cjs/engine/**/*.d.ts
+// would ship without the notice CONTRIBUTING.md requires on every ported file.
+// For each source under src/engine/ whose first line is the notice, this
+// prepends the same notice block (its leading `//` lines, up to the first
+// bare `//`) to both matching declaration files, the ESM one and the CJS one.
+// A declaration that already starts with it is left alone, so running it
+// twice changes nothing. Part of `npm run build`, after `build:types`;
+// check-build.mjs then checks all four outputs.
 //
 // It writes only under dist/, like write-cjs-package.mjs.
 //
@@ -22,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const engineSrc = join(root, 'src', 'engine');
-const engineTypes = join(root, 'dist', 'engine');
+const engineTypes = [join(root, 'dist', 'engine'), join(root, 'dist', 'cjs', 'engine')];
 const MARKER = 'Ported from CAMeL Tools';
 
 const sources = (dir) =>
@@ -49,16 +50,18 @@ let missing = 0;
 for (const src of sources(engineSrc)) {
   const block = noticeBlock(readFileSync(src, 'utf8'));
   if (block === null) continue;
-  const dts = join(engineTypes, relative(engineSrc, src)).replace(/\.ts$/u, '.d.ts');
-  if (!existsSync(dts)) {
-    console.error(`write-dts-notices: ${relative(root, dts)} is missing; run build:types first.`);
-    missing += 1;
-    continue;
+  for (const dir of engineTypes) {
+    const dts = join(dir, relative(engineSrc, src)).replace(/\.ts$/u, '.d.ts');
+    if (!existsSync(dts)) {
+      console.error(`write-dts-notices: ${relative(root, dts)} is missing; run build:cjs and build:types first.`);
+      missing += 1;
+      continue;
+    }
+    const text = readFileSync(dts, 'utf8');
+    if (text.startsWith(block)) continue;
+    writeFileSync(dts, block + text);
+    written += 1;
   }
-  const text = readFileSync(dts, 'utf8');
-  if (text.startsWith(block)) continue;
-  writeFileSync(dts, block + text);
-  written += 1;
 }
 console.log(`write-dts-notices: added the ported-code notice to ${written} declaration file(s).`);
 process.exit(missing === 0 ? 0 : 1);
