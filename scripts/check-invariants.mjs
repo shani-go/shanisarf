@@ -59,7 +59,7 @@
 //
 // The scan_text sub-check needs a Python 3 interpreter. SHANISARF_PARITY_PYTHON,
 // when set, names it: a release worktree has no venv of its own and points
-// this at the main tree's (docs/npm-first-publish.md §4), and a path that
+// this at the main tree's (docs/npm-release.md, G3), and a path that
 // does not exist fails the check rather than skipping it. Otherwise it
 // prefers the parity venv's interpreter (tools/parity/.venv) when present,
 // else a system `python3`/`python`. When no interpreter is found it reports

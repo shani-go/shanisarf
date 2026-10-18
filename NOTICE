@@ -254,7 +254,9 @@ line's shape and string values before commit.
 
 ## Review
 
-The review the first npm publish requires (`docs/npm-first-publish.md`, R3):
+The review a release requires when this file, `licenses/` or the data
+package's notices change (`docs/npm-release.md` §0, row 4). For the first
+publish:
 
 - 2026-10-13: the Camel Morph rows re-read against the `camel_morph` README
   at the pinned commit.

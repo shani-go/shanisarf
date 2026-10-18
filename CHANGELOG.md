@@ -1,8 +1,8 @@
 # Changelog
 
-What each published version of `shanisarf` changes. The release runbooks
-(`docs/npm-first-publish.md`, `docs/npm-release.md`) turn "Unreleased" into
-a dated entry when a version is published.
+What each published version of `shanisarf` changes. The release runbook
+(`docs/npm-release.md`) turns "Unreleased" into a dated entry when a
+version is published.
 
 ## 0.1.0 (2026-10-17)
 

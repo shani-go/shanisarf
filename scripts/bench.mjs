@@ -26,7 +26,7 @@
 // Like measure:db, this skips with a notice and exits 0 when the database or
 // the parity venv is absent. SHANISARF_PARITY_PYTHON, when set, names the
 // venv's interpreter instead: a release worktree has no venv of its own and
-// points this at the main tree's (docs/npm-first-publish.md §4). A path that
+// points this at the main tree's (docs/npm-release.md, G8). A path that
 // does not exist then fails the run rather than skipping it. The service and
 // the static server bind 127.0.0.1 only; the script makes no other network
 // calls.

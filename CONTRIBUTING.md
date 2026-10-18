@@ -157,4 +157,5 @@ tests and the data-free properties only. The full suite is the acceptance
 test.
 
 Runbooks for the rarer tasks live in `docs/`: `upstream-sync.md` (a newer
-CAMeL Tools release), `npm-first-publish.md` and `npm-release.md`.
+CAMeL Tools release) and `npm-release.md` (a release of either npm
+package).

@@ -1,7 +1,9 @@
 # Release log
 
-One entry per published version, appended by `npm-first-publish.md` §8 or
-`npm-release.md`. Not shipped in the package.
+One entry per published version, appended by `npm-release.md` §11. Not
+shipped in the package. The first publish's entries follow its former
+runbook, `npm-first-publish.md`, retired after it (last at `a4716b8`); its
+gate numbers (G1–G12, D1–D3) are the same in `npm-release.md`.
 
 ## 2026-10-17 · shanisarf-db-msa 1.0.0
 
