@@ -4,7 +4,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node10",
     "verbatimModuleSyntax": false,
-    "declaration": false,
+    "declaration": true,
     "sourceMap": false,
     "outDir": "dist/cjs",
     "rootDir": "src"

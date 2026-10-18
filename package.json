@@ -1,6 +1,6 @@
 {
   "name": "shanisarf",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Arabic morphological analyzer for JavaScript: a TypeScript port of the analysis core of CAMeL Tools over the Camel Morph MSA database.",
   "license": "MIT",
   "repository": {
@@ -17,27 +17,50 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "node": {
-        "import": "./dist/esm/index-node.js",
-        "require": "./dist/cjs/index-node.js"
+        "import": {
+          "types": "./dist/index.d.ts",
+          "default": "./dist/esm/index-node.js"
+        },
+        "require": {
+          "types": "./dist/cjs/index.d.ts",
+          "default": "./dist/cjs/index-node.js"
+        }
       },
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
-    "./compile": {
-      "types": "./dist/compile/index.d.ts",
-      "node": {
-        "import": "./dist/esm/compile/index.js",
-        "require": "./dist/cjs/compile/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
       }
     },
-    "./worker": {
-      "types": "./dist/worker/client.d.ts",
+    "./compile": {
       "node": {
-        "import": "./dist/esm/worker/node-import.js",
-        "require": "./dist/cjs/worker/node-require.js"
+        "import": {
+          "types": "./dist/compile/index.d.ts",
+          "default": "./dist/esm/compile/index.js"
+        },
+        "require": {
+          "types": "./dist/cjs/compile/index.d.ts",
+          "default": "./dist/cjs/compile/index.js"
+        }
       },
+      "types": "./dist/compile/index.d.ts"
+    },
+    "./worker": {
+      "node": {
+        "import": {
+          "types": "./dist/worker/client.d.ts",
+          "default": "./dist/esm/worker/node-import.js"
+        },
+        "require": {
+          "types": "./dist/cjs/worker/client.d.ts",
+          "default": "./dist/cjs/worker/node-require.js"
+        }
+      },
+      "types": "./dist/worker/client.d.ts",
       "default": "./dist/esm/worker/web.js"
     }
   },
@@ -53,7 +76,7 @@
   "sideEffects": false,
   "scripts": {
     "prepare": "npm run build",
-    "build": "npm run build:esm && npm run build:cjs && npm run build:types && node scripts/write-cjs-package.mjs && node scripts/check-build.mjs",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types && node scripts/write-dts-notices.mjs && node scripts/write-cjs-package.mjs && node scripts/check-build.mjs",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:types": "tsc -p tsconfig.types.json",
